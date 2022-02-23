@@ -32,7 +32,6 @@ export default {
       }
     );
 
-    console.log(results.length);
     results = results.filter(result=>result.pesajes.length>1)
 
     var minmaxPesajes = [];
@@ -48,12 +47,10 @@ export default {
     var r = minmaxPesajes.map(w=> {return {"Codigo":w.Codigo,
     "FechaInicial":w.pi.Fecha,
     "FechaFinal":w.pf.Fecha,
-    "PesoInicial":w.pi.peso,
-    "PesoFinal":w.pf.peso,
-    "Ganancia": Math.round((w.pf.peso-w.pi.peso)/ ((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)*1000)
+    "PesoInicial":w.pi.Peso,
+    "PesoFinal":w.pf.Peso,
+    "Ganancia": Math.round((w.pf.Peso-w.pi.Peso)/ ((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)*1000)
     }});
-
-    console.log(results.length);
 
     return r
   }
