@@ -15,22 +15,24 @@ export default {
   methods: {
   ganancias(hispesajes)
   {
-    const average = hispesajes.reduce((total, next) => total + next.peso, 0) / hispesajes.length;
+    console.log('Entering gd hispesajes count:');
+    console.log(hispesajes.length);
 
     var results = hispesajes.reduce(function(h, obj) {
-      h[obj.codigo] = (h[obj.codigo] || []).concat(obj);
+      h[obj.Codigo] = (h[obj.Codigo] || []).concat(obj);
       return h; 
     }, {});
 
     results = Object.keys(results).map(key => {
       return {
-          codigo: key, 
-          pesajes : hispesajes.filter(pesaje=>pesaje.codigo===key).sort(function(a,b){
-                    return new Date(a.fecha) - new Date(b.fecha);
+          Codigo: key, 
+          pesajes : hispesajes.filter(pesaje=>pesaje.Codigo===key).sort(function(a,b){
+                    return new Date(a.Fecha) - new Date(b.Fecha);
                               })}
       }
     );
 
+    console.log(results.length);
     results = results.filter(result=>result.pesajes.length>1)
 
     var minmaxPesajes = [];
@@ -39,24 +41,30 @@ export default {
       let minP = datafilter[0];
       let maxP = datafilter[datafilter.length-1];
       let minMaxPesajes = [minP,maxP]
-      let objresult = {codigo: result.codigo, pi: minMaxPesajes[0],pf: minMaxPesajes[1]};
+      let objresult = {Codigo: result.Codigo, pi: minMaxPesajes[0],pf: minMaxPesajes[1]};
       minmaxPesajes.push(objresult);
     });
-    var r = minmaxPesajes.map(w=> {return {"Codigo":w.codigo,
-    "FechaInicial":w.pi.fecha,
-    "FechaFinal":w.pf.fecha,
+
+    var r = minmaxPesajes.map(w=> {return {"Codigo":w.Codigo,
+    "FechaInicial":w.pi.Fecha,
+    "FechaFinal":w.pf.Fecha,
     "PesoInicial":w.pi.peso,
     "PesoFinal":w.pf.peso,
-    "Ganancia": Math.round((w.pf.peso-w.pi.peso)/ ((new Date(w.pf.fecha)-new Date(w.pi.fecha))/86400000)*1000)
+    "Ganancia": Math.round((w.pf.peso-w.pi.peso)/ ((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)*1000)
     }});
+
+    console.log(results.length);
 
     return r
   }
   },
   mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
-        axios.get(url).then(response => this.hispesajes = response.data);
-        this.gridData = this.ganancias(this.hispesajes)
+        axios.get(url).then(response => {
+                            this.hispesajes = response.data;
+                            this.gridData = this.ganancias(this.hispesajes)
+        });
+        
   },
 }
 </script>
