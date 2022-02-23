@@ -12,7 +12,6 @@ export default {
     gridData: [],
   }},
   mounted() {
-        console.log(`the component is now mounted.`)
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
         axios.get(url).then(response => this.gridData = response.data);
   }
