@@ -10,7 +10,9 @@ export default {
     searchQuery: '',
     gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia'],
     gridData: [],
-    hispesajes: []
+    hispesajes: [],
+    FechaInicial : new Date(),
+    FechaFinal : new Date(),
   }},
   methods: {
   ganancias(hispesajes)
@@ -67,12 +69,19 @@ export default {
 </script>
 
 <template>
-  <form id="search">
-    Search <input name="query" v-model="searchQuery">
-  </form>
+<section>
+  <input name="query" v-model="searchQuery" placeholder="Search">
+  <input name="fechaInicial" v-model="fechaInicial" placeholder="Fecha Inicial">
+  <input name="fechaFinal" v-model="fechaInicial" placeholder="Fecha Final">
+</section>
   <DemoGrid
     :data="gridData"
     :columns="gridColumns"
     :filter-key="searchQuery">
   </DemoGrid>
 </template>
+<style>
+section {
+  display: flex;
+}
+</style>
