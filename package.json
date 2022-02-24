@@ -10,7 +10,8 @@
   "dependencies": {
     "axios": "^0.26.0",
     "vue": "^3.2.29",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue3-date-time-picker": "^2.7.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",

@@ -10,12 +10,18 @@ import { RouterLink, RouterView } from "vue-router";
       </nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 
 <style>
 @import "@/assets/base.css";
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 #app {
   max-width: 1280px;
@@ -47,30 +53,29 @@ a,
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
-
 nav {
   width: 100%;
-  font-size: 12px;
+  font-size: 20px;
   text-align: center;
   margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding-top: .2rem;
+  padding-bottom: .2rem;
+  background-color: #e7e7e7;
+  color: #000000;
 }
-
 nav a.router-link-exact-active {
   color: var(--color-text);
 }
-
 nav a.router-link-exact-active:hover {
   background-color: transparent;
 }
-
 nav a {
   display: inline-block;
   padding: 0 1rem;
   border-left: 1px solid var(--color-border);
 }
-
 nav a:first-of-type {
   border: 0;
 }
-
 </style>

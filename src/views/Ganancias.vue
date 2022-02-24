@@ -1,3 +1,18 @@
+<template>
+  <div class="container">
+    <section>
+      <input name="query" v-model="searchQuery" placeholder="Search">
+      <input name="fechaInicial" v-model="fechaInicial" placeholder="Fecha Inicial">
+      <input name="fechaFinal" v-model="fechaInicial" placeholder="Fecha Final">
+    </section>
+  <DemoGrid
+    :data="gridData"
+    :columns="gridColumns"
+    :filter-key="searchQuery">
+  </DemoGrid>
+  </div>
+</template>
+
 <script>
 import DemoGrid from './Grid.vue'
 import axios from 'axios';
@@ -68,20 +83,18 @@ export default {
 }
 </script>
 
-<template>
-<section>
-  <input name="query" v-model="searchQuery" placeholder="Search">
-  <input name="fechaInicial" v-model="fechaInicial" placeholder="Fecha Inicial">
-  <input name="fechaFinal" v-model="fechaInicial" placeholder="Fecha Final">
-</section>
-  <DemoGrid
-    :data="gridData"
-    :columns="gridColumns"
-    :filter-key="searchQuery">
-  </DemoGrid>
-</template>
 <style>
 section {
   display: flex;
+  justify-content: space-around;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+}
+input{
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 </style>
