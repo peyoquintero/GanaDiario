@@ -1,9 +1,23 @@
 <template>
   <div class="container">
     <section>
-      <input name="query" v-model="searchQuery" placeholder="Search">
-      <input name="fechaInicial" v-model="fechaInicial" placeholder="Fecha Inicial">
-      <input name="fechaFinal" v-model="fechaInicial" placeholder="Fecha Final">
+      <input name="fbCodigo" v-model="filtroCodigo" placeholder="Codigo">
+      <label>Fecha Inicial</label>
+      <select v-model="fechaInicial">
+      <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option">
+        {{ option }}
+      </option>
+      </select>
+      <input type="checkbox" id="checkbox1" v-model="fiExacta">
+      <label>Fecha Final</label>
+      <select v-model="fechaFinal">
+      <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option">
+        {{ option }}
+      </option>
+      </select>
+      <input type="checkbox" id="checkbox2" v-model="ffExacta">
+      <input id="marca" v-model="marca" placeholder="marca">
+      <input id="lote" v-model="lote" placeholder="lote">
     </section>
   <DemoGrid
     :data="gridData"
@@ -26,15 +40,18 @@ export default {
     gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia'],
     gridData: [],
     hispesajes: [],
-    FechaInicial : new Date(),
-    FechaFinal : new Date(),
+    fechasPesajes: [],
+    fechaInicial : new Date(),
+    fiExacta: false,
+    fechaFinal : new Date(),
+    ffExacta: false,
+    filtroLote: '*',
+    filtroMarca: '*',
+    filtroCodigo: ''
   }},
   methods: {
   ganancias(hispesajes)
   {
-    console.log('Entering gd hispesajes count:');
-    console.log(hispesajes.length);
-
     var results = hispesajes.reduce(function(h, obj) {
       h[obj.Codigo] = (h[obj.Codigo] || []).concat(obj);
       return h; 
@@ -76,9 +93,11 @@ export default {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
         axios.get(url).then(response => {
                             this.hispesajes = response.data;
-                            this.gridData = this.ganancias(this.hispesajes)
+                            this.gridData = this.ganancias(this.hispesajes);
+                            this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
+//                            this.fechaInicial = this.fechasPesajes[0]??this.fechaInicial
+//                            this.fechaFinal = this.fechasPesajes[this.fechasPesajes.length-1]??this.fechaFinal
         });
-        
   },
 }
 </script>
