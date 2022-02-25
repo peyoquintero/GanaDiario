@@ -1,3 +1,17 @@
+<template>
+  <div class="container">
+    <form id="search">
+      <label style="margin-left:30px">Search<input name="query" v-model="searchQuery"></label>
+      <button type="submit">Ok</button>
+    </form>
+    <DemoGrid
+      :data="gridData"
+      :columns="gridColumns"
+      :filter-key="searchQuery">
+    </DemoGrid>
+  </div>  
+</template>
+
 <script>
 import DemoGrid from './Grid.vue'
 import axios from 'axios';
@@ -18,13 +32,3 @@ export default {
 }
 </script>
 
-<template>
-  <form id="search">
-    Search <input name="query" v-model="searchQuery">
-  </form>
-  <DemoGrid
-    :data="gridData"
-    :columns="gridColumns"
-    :filter-key="searchQuery">
-  </DemoGrid>
-</template>

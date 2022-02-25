@@ -1,30 +1,36 @@
 <template>
   <div class="container">
     <section>
-      <input name="fbCodigo" v-model="filtroCodigo" placeholder="Codigo">
-      <label>Fecha Inicial</label>
-      <select v-model="fechaInicial">
-      <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option">
+      <input name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="Codigo" style="width:80px;">
+      <label>Fecha Inicial
+        <select v-model="fechaInicial">
+        <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
-      </option>
-      </select>
-      <input type="checkbox" id="checkbox1" v-model="fiExacta">
-      <label>Fecha Final</label>
-      <select v-model="fechaFinal">
-      <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option">
+        </option>
+        </select>
+        <input type="checkbox" id="checkbox1" v-model="fiExacta" style="width:20px">
+        <label for="checkbox1">=</label>
+      </label>
+      <label>Fecha Final
+        <select v-model="fechaFinal">
+        <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
-      </option>
-      </select>
-      <input type="checkbox" id="checkbox2" v-model="ffExacta">
-      <input id="marca" v-model="marca" placeholder="marca">
-      <input id="lote" v-model="lote" placeholder="lote">
+        </option>
+        </select>
+        <input type="checkbox" id="checkbox2" v-model="ffExacta" style="width:20px">
+        <label for="checkbox2">=</label>
+      </label>
+      <input id="marca" class="freeinput" v-model="marca" placeholder="Marca">
+      <input id="lote" class="freeinput" v-model="lote" placeholder="Lote">
+      <button type="submit">Ok</button>
     </section>
-  <DemoGrid
+    <DemoGrid
     :data="gridData"
     :columns="gridColumns"
     :filter-key="searchQuery">
-  </DemoGrid>
+    </DemoGrid>
   </div>
+
 </template>
 
 <script>
@@ -105,15 +111,32 @@ export default {
 <style>
 section {
   display: flex;
-  justify-content: space-around;
+  margin-bottom: 10px;
+  justify-content:inherit;
 }
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
 }
-input{
-  margin-bottom: 0.5rem;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+label{
+  text-align: right;
+  align-content: center;
+}
+.freeinput{
+  margin-left:5px;
+  width:120px;
+  height:30px;
+}
+button{
+  border: 2px solid #42b983;
+  background: #42b983;
+  color:white;
+  width:50px;
+  margin-left: 5px;
 }
 </style>
+
+
+
+

@@ -75,6 +75,7 @@ table {
   border: 2px solid #42b983;
   border-radius: 3px;
   background-color: #fff;
+  max-width: 100%;
 }
 th {
   background-color: #42b983;
@@ -82,16 +83,18 @@ th {
   cursor: pointer;
   user-select: none;
   text-align: center;
+  width: 15%;
+  max-width: 60px;
+  padding: 10px 20px;
+  font-size: 18px;
 }
 
 td {
   background-color: #f9f9f9;
   text-align: center;
-}
-th,
-td {
-  min-width: 120px;
+  width: 15%;
   padding: 10px 20px;
+  max-width: 60px;
 }
 
 th.active {
