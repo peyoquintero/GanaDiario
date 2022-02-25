@@ -15,7 +15,6 @@ import { RouterLink, RouterView } from "vue-router";
 
 <style>
 @import "@/assets/base.css";
-
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -27,7 +26,6 @@ import { RouterLink, RouterView } from "vue-router";
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-
   font-weight: normal;
 }
 
@@ -59,8 +57,7 @@ nav {
   text-align: center;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  padding-top: .2rem;
-  padding-bottom: .2rem;
+  
   background-color: #e7e7e7;
   color: #000000;
 }
@@ -69,6 +66,7 @@ nav a.router-link-exact-active {
 }
 nav a.router-link-exact-active:hover {
   background-color: transparent;
+  background-color: darkslategray;
 }
 nav a {
   display: inline-block;

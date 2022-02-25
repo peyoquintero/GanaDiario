@@ -76,18 +76,18 @@ table {
   border-radius: 3px;
   background-color: #fff;
 }
-
 th {
   background-color: #42b983;
   color: rgba(255, 255, 255, 0.66);
   cursor: pointer;
   user-select: none;
+  text-align: center;
 }
 
 td {
   background-color: #f9f9f9;
+  text-align: center;
 }
-
 th,
 td {
   min-width: 120px;
