@@ -3,7 +3,7 @@
     <section>
       <input name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="Codigo" style="width:80px;">
       <label>Fecha Inicial
-        <select v-model="fechaInicial">
+        <select v-model="fechaInicial" class="freeinput">
         <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
@@ -12,7 +12,7 @@
         <label for="checkbox1">=</label>
       </label>
       <label>Fecha Final
-        <select v-model="fechaFinal">
+        <select v-model="fechaFinal" class="freeinput">
         <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
@@ -20,9 +20,9 @@
         <input type="checkbox" id="checkbox2" v-model="ffExacta" style="width:20px">
         <label for="checkbox2">=</label>
       </label>
-      <input id="marca" class="freeinput" v-model="marca" placeholder="Marca">
-      <input id="lote" class="freeinput" v-model="lote" placeholder="Lote">
-      <button type="submit">Ok</button>
+      <input id="marca" class="freeinput" v-model="filtroMarca" placeholder="Marca">
+      <input id="lote" class="freeinput" v-model="filtroLote" placeholder="Lote">
+      <button @click="applyFilters">Ok</button>
     </section>
     <DemoGrid
     :data="gridData"
@@ -36,6 +36,7 @@
 <script>
 import DemoGrid from './Grid.vue'
 import axios from 'axios';
+import { h } from '@vue/runtime-core';
 
 export default {
   components: {
@@ -47,7 +48,7 @@ export default {
     gridData: [],
     hispesajes: [],
     fechasPesajes: [],
-    fechaInicial : new Date(),
+    fechaInicial : new Date('2020-01-01T00:00:00'),
     fiExacta: false,
     fechaFinal : new Date(),
     ffExacta: false,
@@ -56,6 +57,24 @@ export default {
     filtroCodigo: ''
   }},
   methods: {
+  applyFilters(event)
+  {
+    console.log('Ok Was clicked')
+    this.hispesajesFiltered = this.hispesajes.filter(pesaje=>pesaje.Lote!=='MUERTO') 
+    if (this.filtroMarca!=="*")
+    {
+      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca===this.filtroMarca) 
+    }
+    if (this.filtroLote!=="*")
+    {
+      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Lote===this.filtroLote) 
+    }
+    if (this.filtroCodigo!="")
+    {
+      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.startsWith(this.filtroCodigo)) 
+    }
+    this.gridData = this.ganancias(this.hispesajesFiltered)
+  },  
   ganancias(hispesajes)
   {
     var results = hispesajes.reduce(function(h, obj) {
