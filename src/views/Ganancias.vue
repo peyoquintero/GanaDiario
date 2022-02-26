@@ -73,9 +73,10 @@ export default {
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.startsWith(this.filtroCodigo)) 
     }
-    this.gridData = this.ganancias(this.hispesajesFiltered)
+    this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta)
   },  
-  ganancias(hispesajes)
+
+  ganancias(hispesajes,fechaInicial,fiExacta,fechaFinal,ffExacta)
   {
     var results = hispesajes.reduce(function(h, obj) {
       h[obj.Codigo] = (h[obj.Codigo] || []).concat(obj);
@@ -92,15 +93,26 @@ export default {
     );
 
     results = results.filter(result=>result.pesajes.length>1)
-
+    
     var minmaxPesajes = [];
     results.forEach(result => {
       let datafilter = result.pesajes;
+      datafilter = datafilter.filter(w=>w.Fecha>=fechaInicial&&w.Fecha<=fechaFinal)
       let minP = datafilter[0];
       let maxP = datafilter[datafilter.length-1];
+      if (fiExacta)
+      {
+        minP = datafilter.find(w=>w.Fecha===fechaInicial)
+      }
+      if (ffExacta)
+      {
+        maxP = datafilter.find(w=>w.Fecha===fechaFinal)
+      }
+
       let minMaxPesajes = [minP,maxP]
       let objresult = {Codigo: result.Codigo, pi: minMaxPesajes[0],pf: minMaxPesajes[1]};
-      minmaxPesajes.push(objresult);
+      if((minP!==undefined)&&(maxP!==undefined)) 
+      {minmaxPesajes.push(objresult)};
     });
 
     var r = minmaxPesajes.map(w=> {return {"Codigo":w.Codigo,
@@ -118,10 +130,10 @@ export default {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
         axios.get(url).then(response => {
                             this.hispesajes = response.data;
-                            this.gridData = this.ganancias(this.hispesajes);
+//                            this.gridData = this.ganancias(this.hispesajes,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta);
                             this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
-//                            this.fechaInicial = this.fechasPesajes[0]??this.fechaInicial
-//                            this.fechaFinal = this.fechasPesajes[this.fechasPesajes.length-1]??this.fechaFinal
+                            this.fechaInicial = this.fechasPesajes[0]??this.fechaInicial
+                            this.fechaFinal = this.fechasPesajes[this.fechasPesajes.length-1]??this.fechaFinal
         });
   },
 }
