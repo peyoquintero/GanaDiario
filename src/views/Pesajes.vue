@@ -7,6 +7,7 @@
     <DemoGrid
       :data="gridData"
       :columns="gridColumns"
+      :exclude-filter="excludeColumn"
       :filter-key="searchQuery">
     </DemoGrid>
   </div>  
@@ -24,6 +25,7 @@ export default {
     searchQuery: '',
     gridColumns: ['Fecha','Codigo','Peso','Sexo','Marca','Lote'],
     gridData: [],
+    excludeColumn:'Peso'
   }},
   mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";

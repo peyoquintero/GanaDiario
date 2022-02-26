@@ -3,6 +3,7 @@ export default {
   props: {
     data: Array,
     columns: Array,
+    excludeFilter: String,
     filterKey: String
   },
   data() {
@@ -19,7 +20,7 @@ export default {
       let data = this.data
       if (filterKey) {
         data = data.filter((row) => {
-          return Object.keys(row).some((key) => {
+          return Object.keys(row).filter(w=>w!==this.excludeFilter).some((key) => {
             return String(row[key]).toLowerCase().indexOf(filterKey) > -1
           })
         })
