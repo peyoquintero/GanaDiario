@@ -24,6 +24,7 @@
       <input id="lote" class="freeinput" v-model="filtroLote" placeholder="Lote">
       <button @click="applyFilters">Ok</button>
     </section>
+    <div><span>{{totals}}</span></div>  
     <DemoGrid
     :data="gridData"
     :columns="gridColumns"
@@ -35,6 +36,7 @@
 
 <script>
 import DemoGrid from './Grid.vue'
+
 import axios from 'axios';
 import { h } from '@vue/runtime-core';
 
@@ -56,7 +58,19 @@ export default {
     filtroMarca: '*',
     filtroCodigo: ''
   }},
+  computed: {
+    totals()
+    {
+      let cleanData = this.gridData.filter(w=>(w.Ganancia>-1000 && w.Ganancia<2000)) 
+      let avgGd = Math.round(cleanData.reduce((ac,a) => a.Ganancia + ac,0)/this.gridData.length);
+      let avgDias = Math.round(cleanData.reduce((ac,a) => a.Dias + ac,0)/this.gridData.length);
+      var texto = cleanData.length ? ` Conteo: ${this.gridData.length}, promedio:${avgGd}, prom dias:${avgDias}`
+                  : "No hay datos disponibles";
+      return texto;
+    }
+  },
   methods: {
+   
   applyFilters(event)
   {
     console.log('Ok Was clicked')
@@ -111,7 +125,7 @@ export default {
 
       let minMaxPesajes = [minP,maxP]
       let objresult = {Codigo: result.Codigo, pi: minMaxPesajes[0],pf: minMaxPesajes[1]};
-      if((minP!==undefined)&&(maxP!==undefined)) 
+      if((minP!==undefined)&&(maxP!==undefined)&&(maxP.Fecha>minP.Fecha)) 
       {minmaxPesajes.push(objresult)};
     });
 
@@ -120,7 +134,8 @@ export default {
     "FechaFinal":w.pf.Fecha,
     "PesoInicial":w.pi.Peso,
     "PesoFinal":w.pf.Peso,
-    "Ganancia": Math.round((w.pf.Peso-w.pi.Peso)/ ((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)*1000)
+    "Ganancia": Math.round((w.pf.Peso-w.pi.Peso)/ ((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)*1000),
+    "Dias": Math.round((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)
     }});
 
     return r
@@ -130,7 +145,6 @@ export default {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
         axios.get(url).then(response => {
                             this.hispesajes = response.data;
-//                            this.gridData = this.ganancias(this.hispesajes,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta);
                             this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
                             this.fechaInicial = this.fechasPesajes[0]??this.fechaInicial
                             this.fechaFinal = this.fechasPesajes[this.fechasPesajes.length-1]??this.fechaFinal
