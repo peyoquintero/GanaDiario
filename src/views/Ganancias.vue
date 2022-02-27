@@ -20,16 +20,24 @@
         <input type="checkbox" id="checkbox2" v-model="ffExacta" style="width:20px">
         <label for="checkbox2">=</label>
       </label>
-      <label>Marca</label>
-      <input id="marca" class="freeinput" v-model="filtroMarca" placeholder="Marca">
-      <label>Lote</label>
-      <input id="lote" class="freeinput" v-model="filtroLote" placeholder="Lote">
+      <label>Marca
+      <input id="marca" class="freeinputsmall" v-model="filtroMarca">
+      </label>
+      <label>Lote
+      <select v-model="filtroLote" class="freeinput">
+        <option v-for="option in lotes" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
+        {{ option }}
+        </option>
+      </select>
+      </label>
       <button @click="applyFilters">Ok</button>
     </section>
     <div style="margin-top:5px"><span><strong>{{totals}}</strong></span></div>  
     <DemoGrid
     :data="gridData"
     :columns="gridColumns"
+    :headers="gridHeaders"
+    :headerwidthpct="gridHeaderwidthpct"
     :filter-key="searchQuery" style="margin-top:15px">
     </DemoGrid>
   </div>
@@ -38,9 +46,7 @@
 
 <script>
 import DemoGrid from './Grid.vue'
-
 import axios from 'axios';
-import { h } from '@vue/runtime-core';
 
 export default {
   components: {
@@ -49,6 +55,8 @@ export default {
   data() {return {
     searchQuery: '',
     gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia'],
+    gridHeaders: ['Codigo','Inicio','Final','Peso(I)','Peso(F)','Ganancia'],
+    gridHeaderwidthpct:[15,20,20,15,15,15],
     gridData: [],
     hispesajes: [],
     fechasPesaje: [],
@@ -58,19 +66,21 @@ export default {
     ffExacta: false,
     filtroLote: '*',
     filtroMarca: '*',
-    filtroCodigo: ''
+    filtroCodigo: '',
+    lotes:[]
   }},
   computed: {
     totals()
     {
+      console.log('Recalc lotas');
       let cleanData = this.gridData.filter(w=>(w.Ganancia>-1000 && w.Ganancia<2000 &&
       w.PesoInicial>0 && w.PesoFinal>0)) 
       let avgGd = Math.round(cleanData.reduce((ac,a) => a.Ganancia + ac,0)/this.gridData.length);
       let avgDias = Math.round(cleanData.reduce((ac,a) => a.Dias + ac,0)/this.gridData.length);
       let promUltPeso = this.median(cleanData.map(function(element){return element.PesoFinal}));
+      let labelPromUltPeso = promUltPeso>500? '' : `Promedio Ultimo Peso:  ${promUltPeso}`
       let media =  this.median(cleanData.map(function(element){return element.Ganancia}));
-      var texto = cleanData.length ? ` Cabezas:  ${this.gridData.length},   Ganancia Diaria:  ${avgGd},   Promedio Ultimo Peso:  ${promUltPeso}   Promedio dias:  ${avgDias}  Media: ${media??""}    (Excluye datos incompletos])`
-                  : "No hay datos disponibles";
+      var texto = cleanData.length>0 ? ` Cabezas:  ${this.gridData.length},   Ganancia Diaria:  ${avgGd}, Media: ${media??""}  Promedio dias:  ${avgDias}  ${labelPromUltPeso}   (Excluye datos incompletos])` : `No hay datos disponibles`;
       return texto;
     }
   },
@@ -79,6 +89,11 @@ export default {
     const mid = Math.floor(arr.length / 2),
     nums = [...arr].sort((a, b) => a - b);
   return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+  },
+  validLoteOptions(lotes)
+  {
+    lotes.push('*');
+    return lotes.filter(w=>(w!=='NULL' && w!='MUERTO'))
   },
   applyFilters(event)
   {
@@ -154,8 +169,9 @@ export default {
         axios.get(url).then(response => {
                             this.hispesajes = response.data;
                             this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
-                            this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial
-                            this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal
+                            this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
+                            this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
+                            this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
         });
   },
 }
@@ -179,6 +195,11 @@ label{
 .freeinput{
   margin-left:5px;
   width:120px;
+  height:30px;
+}
+.freeinputsmall{
+  margin-left:5px;
+  width:40px;
   height:30px;
 }
 button{

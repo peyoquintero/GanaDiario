@@ -7,6 +7,8 @@
     <DemoGrid
       :data="gridData"
       :columns="gridColumns"
+      :headers="gridColumns"
+      :headerwidthpct="gridHeaderwidthpct"
       :exclude-filter="excludeColumn"
       :filter-key="searchQuery">
     </DemoGrid>
@@ -24,6 +26,7 @@ export default {
   data() {return {
     searchQuery: '',
     gridColumns: ['Fecha','Codigo','Peso','Sexo','Marca','Lote'],
+    gridHeaderwidthpct: [100,50,50,50,50,100],
     gridData: [],
     excludeColumn:'Peso'
   }},

@@ -3,6 +3,8 @@ export default {
   props: {
     data: Array,
     columns: Array,
+    headers: Array,
+    headerwidthpct: Array,
     excludeFilter: String,
     filterKey: String
   },
@@ -36,6 +38,17 @@ export default {
     }
   },
   methods: {
+    headerKeyMapping(headerKey)
+    {
+      var index = this.headers.indexOf(headerKey); 
+      return this.columns[index];
+    },
+    colwidth(key)
+    {
+      var index = this.headers.indexOf(key); 
+      console.log(this.headerwidthpct);
+      return `column-width:${this.headerwidthpct[index]}%`;
+    },
     sortBy(key) {
       this.sortKey = key
       this.sortOrders[key] = this.sortOrders[key] * -1
@@ -48,11 +61,12 @@ export default {
 </script>
 
 <template>
-  <table v-if="filteredData.length">
+  <table v-if="filteredData.length" >
     <thead>
       <tr>
-        <th v-for="key in columns"
-          @click="sortBy(key)"
+        <th v-for="key in headers" 
+        :style="colwidth(key)"
+          @click="sortBy(headerKeyMapping(key))"
           :class="{ active: sortKey == key }">
           {{ capitalize(key) }}
           <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
@@ -76,7 +90,7 @@ table {
   border: 2px solid #42b983;
   border-radius: 3px;
   background-color: #fff;
-  max-width: 100%;
+  max-width: 80%;
 }
 th {
   background-color: #42b983;
@@ -84,8 +98,6 @@ th {
   cursor: pointer;
   user-select: none;
   text-align: center;
-  width: 15%;
-  max-width: 60px;
   padding: 10px 20px;
   font-size: 18px;
 }
@@ -93,9 +105,7 @@ th {
 td {
   background-color: #f9f9f9;
   text-align: center;
-  width: 15%;
   padding: 10px 20px;
-  max-width: 60px;
 }
 
 th.active {
