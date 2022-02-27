@@ -68,7 +68,7 @@ export default {
       </tr>
     </tbody>
   </table>
-  <p v-else>No matches found.</p>
+  <p v-else></p>
 </template>
 
 <style>

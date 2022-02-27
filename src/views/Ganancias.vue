@@ -20,15 +20,17 @@
         <input type="checkbox" id="checkbox2" v-model="ffExacta" style="width:20px">
         <label for="checkbox2">=</label>
       </label>
+      <label>Marca</label>
       <input id="marca" class="freeinput" v-model="filtroMarca" placeholder="Marca">
+      <label>Lote</label>
       <input id="lote" class="freeinput" v-model="filtroLote" placeholder="Lote">
       <button @click="applyFilters">Ok</button>
     </section>
-    <div><span>{{totals}}</span></div>  
+    <div style="margin-top:5px"><span><strong>{{totals}}</strong></span></div>  
     <DemoGrid
     :data="gridData"
     :columns="gridColumns"
-    :filter-key="searchQuery">
+    :filter-key="searchQuery" style="margin-top:15px">
     </DemoGrid>
   </div>
 
@@ -49,7 +51,7 @@ export default {
     gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia'],
     gridData: [],
     hispesajes: [],
-    fechasPesajes: [],
+    fechasPesaje: [],
     fechaInicial : new Date('2020-01-01T00:00:00'),
     fiExacta: false,
     fechaFinal : new Date(),
@@ -61,19 +63,25 @@ export default {
   computed: {
     totals()
     {
-      let cleanData = this.gridData.filter(w=>(w.Ganancia>-1000 && w.Ganancia<2000)) 
+      let cleanData = this.gridData.filter(w=>(w.Ganancia>-1000 && w.Ganancia<2000 &&
+      w.PesoInicial>0 && w.PesoFinal>0)) 
       let avgGd = Math.round(cleanData.reduce((ac,a) => a.Ganancia + ac,0)/this.gridData.length);
       let avgDias = Math.round(cleanData.reduce((ac,a) => a.Dias + ac,0)/this.gridData.length);
-      var texto = cleanData.length ? ` Conteo: ${this.gridData.length}, promedio:${avgGd}, prom dias:${avgDias}`
+      let promUltPeso = this.median(cleanData.map(function(element){return element.PesoFinal}));
+      let media =  this.median(cleanData.map(function(element){return element.Ganancia}));
+      var texto = cleanData.length ? ` Cabezas:  ${this.gridData.length},   Ganancia Diaria:  ${avgGd},   Promedio Ultimo Peso:  ${promUltPeso}   Promedio dias:  ${avgDias}  Media: ${media??""}    (Excluye datos incompletos])`
                   : "No hay datos disponibles";
       return texto;
     }
   },
   methods: {
-   
+  median(arr)  {
+    const mid = Math.floor(arr.length / 2),
+    nums = [...arr].sort((a, b) => a - b);
+  return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+  },
   applyFilters(event)
   {
-    console.log('Ok Was clicked')
     this.hispesajesFiltered = this.hispesajes.filter(pesaje=>pesaje.Lote!=='MUERTO') 
     if (this.filtroMarca!=="*")
     {
@@ -129,7 +137,7 @@ export default {
       {minmaxPesajes.push(objresult)};
     });
 
-    var r = minmaxPesajes.map(w=> {return {"Codigo":w.Codigo,
+    var datos = minmaxPesajes.map(w=> {return {"Codigo":w.Codigo,
     "FechaInicial":w.pi.Fecha,
     "FechaFinal":w.pf.Fecha,
     "PesoInicial":w.pi.Peso,
@@ -138,7 +146,7 @@ export default {
     "Dias": Math.round((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)
     }});
 
-    return r
+    return datos
   }
   },
   mounted() {
@@ -146,8 +154,8 @@ export default {
         axios.get(url).then(response => {
                             this.hispesajes = response.data;
                             this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
-                            this.fechaInicial = this.fechasPesajes[0]??this.fechaInicial
-                            this.fechaFinal = this.fechasPesajes[this.fechasPesajes.length-1]??this.fechaFinal
+                            this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial
+                            this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal
         });
   },
 }
@@ -178,6 +186,7 @@ button{
   background: #42b983;
   color:white;
   width:50px;
+  height:30px;
   margin-left: 5px;
 }
 </style>
