@@ -173,12 +173,12 @@ export default {
                             this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
                             this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
                             this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
-                            const parsed = JSON.stringify(this.hispesajes);
-                            localStorage.setItem('hispesajes', parsed);
+                                  localStorage.setItem('hispesajes', parsed);
         });
         }
         catch{
           this.hispesajes = JSON.parse(localStorage.getItem('hispesajes'));
+                      const parsed = JSON.stringify(this.hispesajes);
         }
   },
 }

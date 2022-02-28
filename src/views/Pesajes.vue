@@ -33,11 +33,12 @@ export default {
   mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
         try{
-        axios.get(url).then(response => this.gridData = response.data);
-                            localStorage.setItem('hispesajes', parsed);
+        axios.get(url).then(response => {this.gridData = response.data;
+                                        localStorage.setItem('hispesajes', JSON.stringify(this.gridData));})
+        .catch(err=>this.hispesajes = JSON.parse(localStorage.getItem('hispesajes')))
         }
-        catch{
-          this.hispesajes = JSON.parse(localStorage.getItem('hispesajes'));
+        catch(error){
+          console.log('Problema trayendo datos');
         }
   }
 }
