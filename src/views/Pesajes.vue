@@ -26,13 +26,19 @@ export default {
   data() {return {
     searchQuery: '',
     gridColumns: ['Fecha','Codigo','Peso','Sexo','Marca','Lote'],
-    gridHeaderwidthpct: [100,50,50,50,50,100],
+    gridHeaderwidthpct: [20,15,15,15,10,25],
     gridData: [],
     excludeColumn:'Peso'
   }},
   mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
+        try{
         axios.get(url).then(response => this.gridData = response.data);
+                            localStorage.setItem('hispesajes', parsed);
+        }
+        catch{
+          this.hispesajes = JSON.parse(localStorage.getItem('hispesajes'));
+        }
   }
 }
 </script>

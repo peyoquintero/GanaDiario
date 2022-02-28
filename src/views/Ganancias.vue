@@ -166,13 +166,20 @@ export default {
   },
   mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
+        try{
         axios.get(url).then(response => {
                             this.hispesajes = response.data;
                             this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
                             this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
                             this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
                             this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
+                            const parsed = JSON.stringify(this.hispesajes);
+                            localStorage.setItem('hispesajes', parsed);
         });
+        }
+        catch{
+          this.hispesajes = JSON.parse(localStorage.getItem('hispesajes'));
+        }
   },
 }
 </script>
