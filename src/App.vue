@@ -3,28 +3,19 @@ import { RouterLink, RouterView } from "vue-router";
 </script>
 <template>
  <!-- <header>-->
-    <div class="wrapper">
+    <div >
       <nav>
         <RouterLink to="/">Ganancias</RouterLink>
         <RouterLink to="/pesajes">Pesajes</RouterLink>
       </nav>
+      <RouterView />
     </div>
  <!-- </header>-->
-  <RouterView />
+  
 </template>
 
 <style>
 @import "@/assets/base.css";
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content:center;
-  background: rgb(237, 233, 233);
-  width:60%;
-  height:50px;
-  margin: auto;
-  margin-bottom: 10px;
-}
 a {
   text-decoration: none;
   transition: 0.4s;

@@ -1,38 +1,39 @@
 <template>
   <div class="container">
     <section>
-      <input name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="Codigo" style="width:80px;">
-      <label>Fecha Inicial
-        <select v-model="fechaInicial" class="freeinput">
-        <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
-        {{ option }}
-        </option>
-        </select>
-        <input type="checkbox" id="checkbox1" v-model="fiExacta" style="width:20px">
-        <label for="checkbox1">=</label>
-      </label>
-      <label>Fecha Final
-        <select v-model="fechaFinal" class="freeinput">
-        <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
-        {{ option }}
-        </option>
-        </select>
-        <input type="checkbox" id="checkbox2" v-model="ffExacta" style="width:20px">
-        <label for="checkbox2">=</label>
-      </label>
-      <label>Marca
-      <input id="marca" class="freeinputsmall" v-model="filtroMarca">
-      </label>
+      <label >Codigo
+        <input style="display:block" name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="Codigo"></label>
+      <label>Marca 
+        <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca"></label>
       <label>Lote
-      <select v-model="filtroLote" class="freeinput">
+        <select style="display:block" v-model="filtroLote" class="freeinput">
         <option v-for="option in lotes" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
-      </select>
+        </select>
+        </label>
+        <label>Fecha Inicial
+        <select style="display:block; width:120px; height:30px" v-model="fechaInicial" >
+        <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
+        {{ option }}
+        </option>
+        </select>
+        </label>
+          <input style="margin-top:35px;" type="checkbox" id="checkbox1" v-model="fiExacta" >
+          <label style="margin-top:30px;">=</label>
+      <label>Fecha Final
+        <select style=" display:block; width:120px; height:30px" v-model="fechaFinal" >
+        <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
+        {{ option }}
+        </option>
+        </select>
       </label>
+      <input style="margin-top:35px;" type="checkbox" id="checkbox2" v-model="ffExacta" >
+      <label style="margin-top:30px;">=</label>
       <button @click="applyFilters">Ok</button>
     </section>
     <div style="margin-top:5px"><span><strong>{{totals}}</strong></span></div>  
+    <div>
     <DemoGrid
     :data="gridData"
     :columns="gridColumns"
@@ -40,6 +41,7 @@
     :headerwidthpct="gridHeaderwidthpct"
     :filter-key="searchQuery" style="margin-top:15px">
     </DemoGrid>
+  </div>
   </div>
 
 </template>
@@ -80,7 +82,7 @@ export default {
       let promUltPeso = this.median(cleanData.map(function(element){return element.PesoFinal}));
       let labelPromUltPeso = promUltPeso>500? '' : `Promedio Ultimo Peso:  ${promUltPeso}`
       let media =  this.median(cleanData.map(function(element){return element.Ganancia}));
-      var texto = cleanData.length>0 ? ` Cabezas:  ${this.gridData.length},   Ganancia Diaria:  ${avgGd}, Media: ${media??""}  Promedio dias:  ${avgDias}  ${labelPromUltPeso}   (Excluye datos incompletos])` : `No hay datos disponibles`;
+      var texto = cleanData.length>0 ? ` Cabezas: ${this.gridData.length}, Ganancia(grs):  ${avgGd}, Media: ${media??""}  Dias:  ${avgDias}  ${labelPromUltPeso}` : `No hay datos disponibles`;
       return texto;
     }
   },
@@ -173,49 +175,58 @@ export default {
                             this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
                             this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
                             this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
-                                  localStorage.setItem('hispesajes', parsed);
+                                  localStorage.setItem('hispesajes', JSON.stringify(this.hispesajes));
         });
         }
         catch{
           this.hispesajes = JSON.parse(localStorage.getItem('hispesajes'));
-                      const parsed = JSON.stringify(this.hispesajes);
         }
   },
 }
 </script>
 
 <style>
+.container {
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+  margin:0%;
+}
 section {
   display: flex;
-  margin-bottom: 10px;
-  justify-content:inherit;
-}
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  align-items:center;
+  border-radius: 5px;
+  border-width:2px;
+  border-style:solid;
+  border-color:lightgray;
+  justify-content: center;
+  width:100%;
 }
 label{
-  text-align: right;
-  align-content: center;
+  font-size:14px;
+  font-weight: bold;
+  margin: 0.2rem;
 }
 .freeinput{
   margin-left:5px;
-  width:120px;
+  width:80px;
   height:30px;
 }
 .freeinputsmall{
   margin-left:5px;
-  width:40px;
+  width:30px;
   height:30px;
 }
 button{
   border: 2px solid #42b983;
   background: #42b983;
   color:white;
-  width:50px;
-  height:30px;
-  margin-left: 5px;
+  width:40px;
+  height:40px;
+  margin-top:25px;
+  margin-right: 5px;
+  border-radius: 5px;
 }
 </style>
 

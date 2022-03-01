@@ -1,3 +1,27 @@
+<template>
+  <table v-if="filteredData.length" >
+    <thead>
+      <tr>
+        <th v-for="key in headers" 
+        :style="colwidth(key)"
+          @click="sortBy(headerKeyMapping(key))"
+          :class="{ active: sortKey == key }">
+          {{ capitalize(key) }}
+          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="entry in filteredData">
+        <td v-for="key in columns">
+          {{entry[key]}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p v-else></p>
+</template>
 <script>
 export default {
   props: {
@@ -60,37 +84,11 @@ export default {
 }
 </script>
 
-<template>
-  <table v-if="filteredData.length" >
-    <thead>
-      <tr>
-        <th v-for="key in headers" 
-        :style="colwidth(key)"
-          @click="sortBy(headerKeyMapping(key))"
-          :class="{ active: sortKey == key }">
-          {{ capitalize(key) }}
-          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="entry in filteredData">
-        <td v-for="key in columns">
-          {{entry[key]}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <p v-else></p>
-</template>
-
 <style>
 table {
   border: 2px solid #42b983;
   border-radius: 3px;
   background-color: #fff;
-  max-width: 80%;
 }
 th {
   background-color: #42b983;
@@ -98,14 +96,14 @@ th {
   cursor: pointer;
   user-select: none;
   text-align: center;
-  padding: 10px 20px;
+  padding: 5px 10px;
   font-size: 18px;
 }
 
 td {
   background-color: #f9f9f9;
   text-align: center;
-  padding: 10px 20px;
+  padding: 5px 10px;
 }
 
 th.active {
