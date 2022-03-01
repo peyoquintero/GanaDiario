@@ -2,16 +2,13 @@
 import { RouterLink, RouterView } from "vue-router";
 </script>
 <template>
- <!-- <header>-->
-    <div >
+   <div>
       <nav>
         <RouterLink to="/">Ganancias</RouterLink>
         <RouterLink to="/pesajes">Pesajes</RouterLink>
       </nav>
       <RouterView />
-    </div>
- <!-- </header>-->
-  
+ </div>
 </template>
 
 <style>

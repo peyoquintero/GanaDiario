@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <section>
-      <label >Codigo
+      <label>Codigo
         <input style="display:block" name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="Codigo"></label>
       <label>Marca 
         <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca"></label>
@@ -12,28 +12,27 @@
         </option>
         </select>
         </label>
-        <label>Fecha Inicial
+        <label style="margin-left:30px;">Fecha Inicial
         <select style="display:block; width:120px; height:30px" v-model="fechaInicial" >
         <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
         </select>
         </label>
-          <input style="margin-top:35px;" type="checkbox" id="checkbox1" v-model="fiExacta" >
+          <input style="margin-top:25px;" type="checkbox" id="checkbox1" v-model="fiExacta" >
           <label style="margin-top:30px;">=</label>
-      <label>Fecha Final
+      <label  >Fecha Final
         <select style=" display:block; width:120px; height:30px" v-model="fechaFinal" >
         <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
         </select>
       </label>
-      <input style="margin-top:35px;" type="checkbox" id="checkbox2" v-model="ffExacta" >
+      <input style="margin-top:25px;" type="checkbox" id="checkbox2" v-model="ffExacta" >
       <label style="margin-top:30px;">=</label>
       <button @click="applyFilters">Ok</button>
     </section>
     <div style="margin-top:5px"><span><strong>{{totals}}</strong></span></div>  
-    <div>
     <DemoGrid
     :data="gridData"
     :columns="gridColumns"
@@ -41,7 +40,6 @@
     :headerwidthpct="gridHeaderwidthpct"
     :filter-key="searchQuery" style="margin-top:15px">
     </DemoGrid>
-  </div>
   </div>
 
 </template>
@@ -83,6 +81,7 @@ export default {
       let labelPromUltPeso = promUltPeso>500? '' : `Promedio Ultimo Peso:  ${promUltPeso}`
       let media =  this.median(cleanData.map(function(element){return element.Ganancia}));
       var texto = cleanData.length>0 ? ` Cabezas: ${this.gridData.length}, Ganancia(grs):  ${avgGd}, Media: ${media??""}  Dias:  ${avgDias}  ${labelPromUltPeso}` : `No hay datos disponibles`;
+      
       return texto;
     }
   },
@@ -190,18 +189,18 @@ export default {
   display:flex;
   flex-direction:column;
   justify-content: center;
-  align-items: center;
-  margin:0%;
+  
 }
 section {
   display: flex;
+  justify-content: center;
   align-items:center;
+  flex-wrap:wrap;
   border-radius: 5px;
   border-width:2px;
   border-style:solid;
   border-color:lightgray;
-  justify-content: center;
-  width:100%;
+  padding-bottom: 5px;
 }
 label{
   font-size:14px;
@@ -209,24 +208,22 @@ label{
   margin: 0.2rem;
 }
 .freeinput{
-  margin-left:5px;
   width:80px;
   height:30px;
 }
 .freeinputsmall{
-  margin-left:5px;
-  width:30px;
+  width:50px;
   height:30px;
 }
 button{
   border: 2px solid #42b983;
+  border-radius: 5px;
   background: #42b983;
   color:white;
   width:40px;
-  height:40px;
-  margin-top:25px;
-  margin-right: 5px;
-  border-radius: 5px;
+  height:30px;
+  margin-top:20px;
+  margin-left: 10px;
 }
 </style>
 
