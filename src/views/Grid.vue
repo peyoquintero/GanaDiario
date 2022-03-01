@@ -99,21 +99,17 @@ th {
   padding: 5px 10px;
   font-size: 18px;
 }
-
 td {
   background-color: #f9f9f9;
   text-align: center;
   padding: 5px 10px;
 }
-
 th.active {
   color: #fff;
 }
-
 th.active .arrow {
   opacity: 1;
 }
-
 .arrow {
   display: inline-block;
   vertical-align: middle;
@@ -122,13 +118,11 @@ th.active .arrow {
   margin-left: 5px;
   opacity: 0.66;
 }
-
 .arrow.asc {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-bottom: 4px solid #fff;
 }
-
 .arrow.dsc {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;

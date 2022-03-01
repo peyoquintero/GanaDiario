@@ -1,9 +1,10 @@
 <template>
   <div class="container">
-    <form id="search">
-      <label style="margin-left:30px">Search<input name="query" v-model="searchQuery"></label>
-      <button type="submit">Ok</button>
-    </form>
+    <section>
+        <label for input="query">Search</label>
+        <input style="height:30px" name="query" v-model="searchQuery">
+      <button style="margin-top:2px" type="submit">Ok</button>
+    </section>
     <DemoGrid
       :data="gridData"
       :columns="gridColumns"
@@ -43,4 +44,43 @@ export default {
   }
 }
 </script>
-
+<style scoped>
+.container {
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+}
+section {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  flex-wrap:wrap;
+  border-radius: 5px;
+  border-width:2px;
+  border-style:solid;
+  border-color:lightgray;
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color:rgb(211, 211, 211);
+}
+label{
+  font-family: arial;
+  font-size:14px;
+  font-weight: bold;
+  margin: 5px;
+}
+input{
+  width:120px;
+  height:30px;
+}
+button{
+  border: 2px solid #42b983;
+  border-radius: 5px;
+  background: #42b983;
+  color:white;
+  width:40px;
+  height:30px;
+  margin-top:20px;
+  margin-left: 10px;
+}
+</style>

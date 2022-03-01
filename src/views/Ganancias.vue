@@ -32,13 +32,19 @@
       <label style="margin-top:30px;">=</label>
       <button @click="applyFilters">Ok</button>
     </section>
-    <div style="margin-top:5px"><span><strong>{{totals}}</strong></span></div>  
+    <section class="totals">
+      <item >{{resultCabezas}} </item> 
+      <item>{{resultGanancia}}</item> 
+      <item>{{resultMedia}}</item>   
+      <item>{{resultUltPeso}}</item>
+      <item>{{resultDias}}</item> 
+    </section>
     <DemoGrid
     :data="gridData"
     :columns="gridColumns"
     :headers="gridHeaders"
     :headerwidthpct="gridHeaderwidthpct"
-    :filter-key="searchQuery" style="margin-top:15px">
+    :filter-key="searchQuery">
     </DemoGrid>
   </div>
 
@@ -70,20 +76,36 @@ export default {
     lotes:[]
   }},
   computed: {
-    totals()
+    cleanData()
     {
-      console.log('Recalc lotas');
-      let cleanData = this.gridData.filter(w=>(w.Ganancia>-1000 && w.Ganancia<2000 &&
-      w.PesoInicial>0 && w.PesoFinal>0)) 
-      let avgGd = Math.round(cleanData.reduce((ac,a) => a.Ganancia + ac,0)/this.gridData.length);
-      let avgDias = Math.round(cleanData.reduce((ac,a) => a.Dias + ac,0)/this.gridData.length);
-      let promUltPeso = this.median(cleanData.map(function(element){return element.PesoFinal}));
-      let labelPromUltPeso = promUltPeso>500? '' : `Promedio Ultimo Peso:  ${promUltPeso}`
-      let media =  this.median(cleanData.map(function(element){return element.Ganancia}));
-      var texto = cleanData.length>0 ? ` Cabezas: ${this.gridData.length}, Ganancia(grs):  ${avgGd}, Media: ${media??""}  Dias:  ${avgDias}  ${labelPromUltPeso}` : `No hay datos disponibles`;
-      
-      return texto;
-    }
+      return this.gridData.filter(w=>(w.Ganancia>-1000 && w.Ganancia<2000 && w.PesoInicial>0 && w.PesoFinal>0)) ;
+    },
+    resultCabezas()
+    { var cabezas = this.cleanData.length>0 ? ` Cabezas: ${this.gridData.length}`: `No hay datos disponibles`;
+      return cabezas;
+    },
+    resultGanancia()
+    {
+      let avgGd = Math.round(this.cleanData.reduce((ac,a) => a.Ganancia + ac,0)/this.gridData.length);
+      var ganancia = this.cleanData.length>0 ? `Ganancia(grs):  ${avgGd}`:null;
+      return ganancia;
+    },
+    resultMedia()
+    { let media =  this.median(this.cleanData.map(function(element){return element.Ganancia}));
+      var mediana = this.cleanData.length>0 ? `Media: ${media??""} `: "";
+      return mediana;
+    },
+    resultDias()
+    { let avgDias = Math.round(this.cleanData.reduce((ac,a) => a.Dias + ac,0)/this.gridData.length);
+      var dias = this.cleanData.length>0 ? `Dias:  ${avgDias}`: "";
+      return dias;
+    },
+    resultUltPeso()
+    { let promUltPeso = this.median(this.cleanData.map(function(element){return element.PesoFinal}));
+      let labelPromUltPeso = promUltPeso>500? '' : `Prom. Ultimo Peso:  ${promUltPeso}`
+      var ultpeso = this.cleanData.length>0 ? `${labelPromUltPeso}`: ""; 
+      return ultpeso;
+    },
   },
   methods: {
   median(arr)  {
@@ -184,7 +206,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   display:flex;
   flex-direction:column;
@@ -200,12 +222,28 @@ section {
   border-width:2px;
   border-style:solid;
   border-color:lightgray;
-  padding-bottom: 5px;
+  padding-bottom: 2px;
+  margin-bottom:2px;
+  background-color:rgb(211, 211, 211);
+}
+.totals{
+  display:flex;
+  justify-content: space-evenly;
+  margin-top:5px;
+  background-color:white;
+}
+item{
+  font-weight:normal;
+  font-style: oblique;
+  font-weight: bold;
+  font-family: arial;
+  color:darkslategrey;
 }
 label{
+  font-family: arial;
   font-size:14px;
   font-weight: bold;
-  margin: 0.2rem;
+  margin: 5px;
 }
 .freeinput{
   width:80px;
