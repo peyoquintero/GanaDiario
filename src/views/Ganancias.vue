@@ -125,7 +125,7 @@ export default {
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca===this.filtroMarca) 
     }
-    if (this.filtroLote!=="*"&&this.filtroLote!=="*")
+    if (this.filtroLote!=="*"&&this.filtroLote!=="")
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Lote===this.filtroLote) 
     }
