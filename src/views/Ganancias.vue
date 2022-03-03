@@ -121,11 +121,11 @@ export default {
   applyFilters(event)
   {
     this.hispesajesFiltered = this.hispesajes.filter(pesaje=>pesaje.Lote!=='MUERTO') 
-    if (this.filtroMarca!=="*")
+    if (this.filtroMarca!=="*" && this.filtroMarca!=="") 
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca===this.filtroMarca) 
     }
-    if (this.filtroLote!=="*")
+    if (this.filtroLote!=="*"&&this.filtroLote!=="*")
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Lote===this.filtroLote) 
     }
@@ -135,7 +135,10 @@ export default {
     }
     this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta)
   },  
-
+  gananciaDiaria(pesoInicial,pesoFinal)
+  {
+    return Math.round((pesoFinal.Peso-pesoInicial.Peso)/ ((new Date(pesoFinal.Fecha)-new Date(pesoInicial.Fecha))/86400000)*1000)
+  },
   ganancias(hispesajes,fechaInicial,fiExacta,fechaFinal,ffExacta)
   {
     var results = hispesajes.reduce(function(h, obj) {
@@ -180,14 +183,14 @@ export default {
     "FechaFinal":w.pf.Fecha,
     "PesoInicial":w.pi.Peso,
     "PesoFinal":w.pf.Peso,
-    "Ganancia": Math.round((w.pf.Peso-w.pi.Peso)/ ((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)*1000),
+    "Ganancia": this.gananciaDiaria(w.pi,w.pf),
     "Dias": Math.round((new Date(w.pf.Fecha)-new Date(w.pi.Fecha))/86400000)
     }});
 
     return datos
   }
   },
-  mounted() {
+    mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
         try{
             axios.get(url).then(response => {
