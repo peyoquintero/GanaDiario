@@ -87,7 +87,7 @@ export default {
     resultGanancia()
     {
       let avgGd = Math.round(this.cleanData.reduce((ac,a) => a.Ganancia + ac,0)/this.gridData.length);
-      var ganancia = this.cleanData.length>0 ? `Ganancia(grs):  ${avgGd}`:null;
+      var ganancia = this.cleanData.length>0 ? `Ganancia(grs):  ${avgGd}`:"";
       return ganancia;
     },
     resultMedia()
@@ -190,17 +190,17 @@ export default {
   mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
         try{
-        axios.get(url).then(response => {
+            axios.get(url).then(response => {
                             this.hispesajes = response.data;
                             this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
                             this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
                             this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
                             this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
-                                  localStorage.setItem('hispesajes', JSON.stringify(this.hispesajes));
+                            localStorage.setItem('hispesajes', JSON.stringify(this.hispesajes));
         });
         }
         catch{
-          this.hispesajes = JSON.parse(localStorage.getItem('hispesajes'));
+                this.hispesajes = JSON.parse(localStorage.getItem('hispesajes'));
         }
   },
 }
