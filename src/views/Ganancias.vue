@@ -60,8 +60,8 @@ export default {
   },
   data() {return {
     searchQuery: '',
-    gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia'],
-    gridHeaders: ['Codigo','Inicio','Final','Peso(I)','Peso(F)','Ganancia'],
+    gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia','PesoHoy'],
+    gridHeaders: ['Codigo','Inicio','Final','Peso(I)','Peso(F)','Ganancia','Peso Hoy'],
     gridHeaderwidthpct:[15,20,20,15,15,15],
     gridData: [],
     hispesajes: [],
@@ -133,8 +133,17 @@ export default {
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.startsWith(this.filtroCodigo)) 
     }
-    this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta)
+     this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta)
+     let obj = this.gridData[0];
+     console.log(obj.FechaFinal);console.log(new Date().toDateString());console.log(obj.PesoFinal);console.log(obj.Ganancia);
+     console.log(this.pesoProyectado(obj.FechaFinal,new Date().toDateString(),obj.PesoFinal,obj.Ganancia))
+
+     this.gridData = this.gridData.map(obj=> ({ ...obj, PesoHoy: this.pesoProyectado(obj.FechaFinal,new Date().toDateString(),obj.PesoFinal,obj.Ganancia) }))
   },  
+  pesoProyectado(fechaInicial,fechaFinal,PesoInicial,gananciaDia)
+  {
+    return parseInt(PesoInicial) + Math.round(((new Date(fechaFinal)-new Date(fechaInicial))/86400000)*gananciaDia/1000);
+  },
   gananciaDiaria(pesoInicial,pesoFinal)
   {
     return Math.round((pesoFinal.Peso-pesoInicial.Peso)/ ((new Date(pesoFinal.Fecha)-new Date(pesoInicial.Fecha))/86400000)*1000)
@@ -155,7 +164,7 @@ export default {
       }
     );
 
-    results = results.filter(result=>result.pesajes.length>1)
+    results = results.filter(result=>result.pesajes.length>1) // Excluir semovientes con un solo pesaje
     
     var minmaxPesajes = [];
     results.forEach(result => {
