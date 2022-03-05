@@ -54,7 +54,7 @@ export default {
     results.forEach(result => {
       let datafilter = result.pesajes;
       let minP = datafilter[0];
-      let objresult = {Codigo: result.Codigo, FechaInicial:minP.Fecha,Sexo:minP.Sexo,Marca:minP.Marca};
+      let objresult = {Codigo: result.Codigo, FechaInicial:minP.Fecha,Sexo:minP.Sexo,Marca:minP.Marca,Activo:minP.Lote!=='MUERTO'};
       {datos.push(objresult)};
     });
 

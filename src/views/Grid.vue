@@ -47,7 +47,15 @@ export default {
       if (filterKey) {
         data = data.filter((row) => {
           return Object.keys(row).filter(w=>w!==this.excludeFilter).some((key) => {
-            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+            if(!filterKey.includes(";"))
+                return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+            else
+            {
+              let included = false;
+              let fkeys = filterKey.split(";").filter(w=>w!=='');
+              fkeys.forEach(element=>{included = included || (String(row[key]).toLowerCase().indexOf(element) > -1)})
+              return included;
+            }
           })
         })
       }
@@ -70,7 +78,6 @@ export default {
     colwidth(key)
     {
       var index = this.headers.indexOf(key); 
-      console.log(this.headerwidthpct);
       return `column-width:${this.headerwidthpct[index]}%`;
     },
     sortBy(key) {
