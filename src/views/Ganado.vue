@@ -3,7 +3,10 @@
     <section>
         <label for input="query">Search</label>
         <input style="height:30px" name="query" v-model="searchQuery">
-      <button style="margin-top:2px" type="submit">Ok</button>
+      <button @click="applyFilters" style="margin-top:2px" type="submit">Ok</button>
+    </section>
+    <section class="totals">
+      <item >{{resultCabezas}} </item> 
     </section>
     <DemoGrid
       :data="gridData"
@@ -35,7 +38,17 @@ export default {
     excludeChar:'?',
     hisPesajes: []
   }},
+  computed: {
+    resultCabezas()
+    { var cabezas = this.gridData.length>0 ? ` Cabezas: ${this.gridData.length}`: `No hay datos disponibles`;
+      return cabezas;
+    }
+  },
   methods : {
+  applyFilters(event)
+  {
+     this.gridData = this.master(this.hisPesajes);
+  },  
   master(hispesajes)
   {
     var results = hispesajes.reduce(function(h, obj) {
@@ -93,9 +106,15 @@ section {
   border-width:2px;
   border-style:solid;
   border-color:lightgray;
-  padding: 5px;
-  margin-bottom: 5px;
+  padding-bottom: 2px;
+  margin-bottom:2px;
   background-color:rgb(211, 211, 211);
+}
+.totals{
+  display:flex;
+  justify-content: space-evenly;
+  margin-top:5px;
+  background-color:white;
 }
 label{
   font-family: arial;

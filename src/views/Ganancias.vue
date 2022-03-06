@@ -136,10 +136,6 @@ export default {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.startsWith(this.filtroCodigo)) 
     }
      this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta)
-     let obj = this.gridData[0];
-     console.log(obj.FechaFinal);console.log(new Date().toDateString());console.log(obj.PesoFinal);console.log(obj.Ganancia);
-     console.log(this.pesoProyectado(obj.FechaFinal,new Date().toDateString(),obj.PesoFinal,obj.Ganancia))
-
      this.gridData = this.gridData.map(obj=> ({ ...obj, PesoHoy: this.pesoProyectado(obj.FechaFinal,new Date().toDateString(),obj.PesoFinal,obj.Ganancia) }))
   },  
   pesoProyectado(fechaInicial,fechaFinal,PesoInicial,gananciaDia)
