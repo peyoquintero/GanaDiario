@@ -11,6 +11,7 @@
       :headers="gridHeaders"
       :headerwidthpct="gridHeaderwidthpct"
       :exclude-filter="excludeColumn"
+      :exclude-char="excludeChar"
       :filter-key="searchQuery">
     </DemoGrid>
   </div>  
@@ -31,6 +32,7 @@ export default {
     gridHeaderwidthpct: [25,25,25,25],
     gridData: [],
     excludeColumn:'Peso',
+    excludeChar:'?',
     hisPesajes: []
   }},
   methods : {

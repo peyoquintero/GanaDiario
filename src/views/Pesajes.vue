@@ -11,6 +11,7 @@
       :headers="gridColumns"
       :headerwidthpct="gridHeaderwidthpct"
       :exclude-filter="excludeColumn"
+      :exclude-char="excludeChar"
       :filter-key="searchQuery">
     </DemoGrid>
   </div>  
@@ -29,7 +30,8 @@ export default {
     gridColumns: ['Fecha','Codigo','Peso','Sexo','Marca','Lote'],
     gridHeaderwidthpct: [20,15,15,15,10,25],
     gridData: [],
-    excludeColumn:'Peso'
+    excludeColumn:'Peso',
+    excludeChar:''
   }},
   mounted() {
         var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";

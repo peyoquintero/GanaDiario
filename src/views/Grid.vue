@@ -30,7 +30,8 @@ export default {
     headers: Array,
     headerwidthpct: Array,
     excludeFilter: String,
-    filterKey: String
+    filterKey: String,
+    excludeChar: String,
   },
   data() {
     return {
@@ -43,7 +44,7 @@ export default {
       const sortKey = this.sortKey
       const filterKey = this.filterKey && this.filterKey.toLowerCase()
       const order = this.sortOrders[sortKey] || 1
-      let data = this.data
+      let data = this.data.filter(w=>(this.excludeChar==="") || (w.Codigo.indexOf(this.excludeChar) === -1))
       if (filterKey) {
         data = data.filter((row) => {
           return Object.keys(row).filter(w=>w!==this.excludeFilter).some((key) => {

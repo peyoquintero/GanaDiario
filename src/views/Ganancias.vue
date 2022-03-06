@@ -44,6 +44,7 @@
     :columns="gridColumns"
     :headers="gridHeaders"
     :headerwidthpct="gridHeaderwidthpct"
+    :exclude-char="excludeChar"
     :filter-key="searchQuery">
     </DemoGrid>
   </div>
@@ -63,6 +64,7 @@ export default {
     gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia','PesoHoy'],
     gridHeaders: ['Codigo','Inicio','Final','Peso(I)','Peso(F)','Ganancia','Peso Hoy'],
     gridHeaderwidthpct:[15,20,20,15,15,15],
+    excludeChar: "",
     gridData: [],
     hispesajes: [],
     fechasPesaje: [],
