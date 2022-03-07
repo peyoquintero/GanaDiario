@@ -1,9 +1,11 @@
 <template>
   <div class="container">
     <section>
-        <label for input="query">Search</label>
-        <input style="height:30px" name="query" v-model="searchQuery">
-      <button @click="applyFilters" style="margin-top:2px" type="submit">Ok</button>
+      <label>Codigo
+        <input style="display:block" name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder=""></label>
+      <label>Marca 
+        <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca"></label>
+      <button @click="applyFilters">Ok</button>
     </section>
     <section class="totals">
       <item >{{resultCabezas}} </item> 
@@ -36,7 +38,10 @@ export default {
     gridData: [],
     excludeColumn:'Peso',
     excludeChar:'?',
-    hisPesajes: []
+    hisPesajes: [],
+    filtroMarca: '*',
+    filtroCodigo: '',
+    hisPesajesFiltered: [],
   }},
   computed: {
     resultCabezas()
@@ -47,7 +52,16 @@ export default {
   methods : {
   applyFilters(event)
   {
-     this.gridData = this.master(this.hisPesajes);
+    this.hispesajesFiltered = this.hisPesajes.filter(pesaje=>pesaje.Lote!=='MUERTO'); 
+    if (this.filtroMarca!=="*" && this.filtroMarca!=="") 
+    {
+      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca===this.filtroMarca); 
+    }
+    if (this.filtroCodigo!="")
+    {
+      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.startsWith(this.filtroCodigo)); 
+    }
+     this.gridData = this.master(this.hispesajesFiltered);
   },  
   master(hispesajes)
   {
