@@ -88,7 +88,8 @@ export default {
     },
     resultGanancia()
     {
-      let avgGd = Math.round(this.cleanData.reduce((ac,a) => a.Ganancia + ac,0)/this.gridData.length);
+      let totalDias = this.cleanData.reduce((ac,a) => this.daysBetweenDates(a.FechaInicial,a.FechaFinal) + ac,0);
+      let avgGd = Math.round(this.cleanData.reduce((ac,a) => (a.Ganancia*this.daysBetweenDates(a.FechaInicial,a.FechaFinal)) + ac,0)/totalDias);
       var ganancia = this.cleanData.length>0 ? `Ganancia(grs):  ${avgGd}`:"";
       return ganancia;
     },
@@ -114,6 +115,15 @@ export default {
     const mid = Math.floor(arr.length / 2),
     nums = [...arr].sort((a, b) => a - b);
   return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+  },
+  daysBetweenDates(fechaInicial,fechaFinal)
+  {
+    let fi = new Date(fechaInicial);
+    let ff = new Date(fechaFinal);
+    let diffTime = Math.abs(ff - fi);
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays>0?diffDays:0;    
   },
   validLoteOptions(lotes)
   {
