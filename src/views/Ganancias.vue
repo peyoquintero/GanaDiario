@@ -2,34 +2,39 @@
   <div class="container">
     <section>
       <label>Codigo
-        <input style="display:block" name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="Codigo"></label>
+        <input style="display:block" name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="Codigo">
+      </label>
       <label>Marca 
-        <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca"></label>
+        <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca">
+      </label>
       <label>Lote
         <select style="display:block" v-model="filtroLote" class="freeinput">
         <option v-for="option in lotes" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
         </select>
-        </label>
-        <label style="margin-left:30px;">Fecha Inicial
+      </label>
+      <label style="margin-left:30px;">Fecha Inicial
         <select style="display:block; width:120px; height:30px" v-model="fechaInicial" >
         <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
         </select>
-        </label>
+      </label>
           <input style="margin-top:25px;" type="checkbox" id="checkbox1" v-model="fiExacta" >
           <label style="margin-top:30px;">=</label>
-      <label  >Fecha Final
+      <label>Fecha Final
         <select style=" display:block; width:120px; height:30px" v-model="fechaFinal" >
         <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
         {{ option }}
         </option>
         </select>
       </label>
-      <input style="margin-top:25px;" type="checkbox" id="checkbox2" v-model="ffExacta" >
-      <label style="margin-top:30px;">=</label>
+        <input style="margin-top:25px;" type="checkbox" id="checkbox2" v-model="ffExacta" >
+        <label style="margin-top:30px;">=</label>
+      <label for="">Solo Ventas
+        <input style="margin-top:25px;" type="checkbox" id="checkbox3" v-model="filtroVentas" >
+      </label>
       <button @click="applyFilters">Ok</button>
     </section>
     <section class="totals">
@@ -75,6 +80,7 @@ export default {
     filtroLote: '*',
     filtroMarca: '*',
     filtroCodigo: '',
+    filtroVentas: false,
     lotes:[]
   }},
   computed: {
@@ -122,7 +128,7 @@ export default {
     let ff = new Date(fechaFinal);
     let diffTime = Math.abs(ff - fi);
     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     return diffDays>0?diffDays:0;    
   },
   validLoteOptions(lotes)
@@ -135,7 +141,7 @@ export default {
     this.hispesajesFiltered = this.hispesajes.filter(pesaje=>pesaje.Lote!=='MUERTO') 
     if (this.filtroMarca!=="*" && this.filtroMarca!=="") 
     {
-      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca===this.filtroMarca) 
+      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca.toLowerCase()===this.filtroMarca.toLowerCase()) 
     }
     if (this.filtroLote!=="*"&&this.filtroLote!=="")
     {
@@ -143,9 +149,10 @@ export default {
     }
     if (this.filtroCodigo!="")
     {
-      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.startsWith(this.filtroCodigo)) 
+      this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.toLowerCase().startsWith(this.filtroCodigo.toLowerCase())) 
     }
-     this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta)
+
+     this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta,this.filtroVentas)
      this.gridData = this.gridData.map(obj=> ({ ...obj, PesoHoy: this.pesoProyectado(obj.FechaFinal,new Date().toDateString(),obj.PesoFinal,obj.Ganancia) }))
   },  
   pesoProyectado(fechaInicial,fechaFinal,PesoInicial,gananciaDia)
@@ -156,7 +163,7 @@ export default {
   {
     return Math.round((pesoFinal.Peso-pesoInicial.Peso)/ ((new Date(pesoFinal.Fecha)-new Date(pesoInicial.Fecha))/86400000)*1000)
   },
-  ganancias(hispesajes,fechaInicial,fiExacta,fechaFinal,ffExacta)
+  ganancias(hispesajes,fechaInicial,fiExacta,fechaFinal,ffExacta,filtroVentas)
   {
     var results = hispesajes.reduce(function(h, obj) {
       h[obj.Codigo] = (h[obj.Codigo] || []).concat(obj);
@@ -187,6 +194,10 @@ export default {
       if (ffExacta)
       {
         maxP = datafilter.find(w=>w.Fecha===fechaFinal)
+      }
+      if (filtroVentas)
+      {
+              maxP = datafilter.find(w=>w.Operacion.toLowerCase()==="venta") 
       }
 
       let minMaxPesajes = [minP,maxP]
