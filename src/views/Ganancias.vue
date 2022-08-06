@@ -7,6 +7,9 @@
       <label>Marca 
         <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca">
       </label>
+      <label>Rango Peso 
+        <input style="display:block" id="pesoI" class="freeinput" v-model="filtroPeso">
+      </label>
       <label>Lote
         <select style="display:block" v-model="filtroLote" class="freeinput">
         <option v-for="option in lotes" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
@@ -79,6 +82,7 @@ export default {
     ffExacta: false,
     filtroLote: '*',
     filtroMarca: '*',
+    filtroPeso: '*',
     filtroCodigo: '',
     filtroVentas: false,
     lotes:[]
@@ -153,6 +157,17 @@ export default {
     }
 
      this.gridData = this.ganancias(this.hispesajesFiltered,this.fechaInicial,this.fiExacta,this.fechaFinal,this.ffExacta,this.filtroVentas)
+
+    if (this.filtroPeso!=="*" && this.filtroPeso.trim()!=="") 
+    {
+      const array=this.filtroPeso.split("-");
+      console.log(`arrlen ${this.gridData[0]} `);
+      if (array.length==2)
+      { 
+        this.gridData = this.gridData.filter(pesaje=>parseInt(pesaje.PesoInicial)>=parseInt(array[0]) && parseInt(pesaje.PesoInicial)<=parseInt(array[1]));
+      } 
+    }
+
      this.gridData = this.gridData.map(obj=> ({ ...obj, PesoHoy: this.pesoProyectado(obj.FechaFinal,new Date().toDateString(),obj.PesoFinal,obj.Ganancia) }))
   },  
   pesoProyectado(fechaInicial,fechaFinal,PesoInicial,gananciaDia)
