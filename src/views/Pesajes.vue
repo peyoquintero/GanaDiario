@@ -34,7 +34,7 @@ export default {
     excludeChar:''
   }},
   mounted() {
-        var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
+        var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/1?key=AIzaSyCGW3gRbBisLX950bZJDylH-_QJTR7ogd8";
         try{
         axios.get(url).then(response => {this.gridData = response.data;
                                         localStorage.setItem('hispesajes', JSON.stringify(this.gridData));})
