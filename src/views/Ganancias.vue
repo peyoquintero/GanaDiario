@@ -147,7 +147,7 @@ export default {
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca.toLowerCase()===this.filtroMarca.toLowerCase()) 
     }
-    if (this.filtroLote!=="*"&&this.filtroLote!=="")
+    if (this.filtroLote!=="*" && this.filtroLote!=="")
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Lote===this.filtroLote) 
     }
@@ -211,7 +211,7 @@ export default {
       }
       if (filtroVentas)
       {
-              maxP = datafilter.find(w=>w.Operacion.toLowerCase()==="venta") 
+              maxP = datafilter.find(w=>w.Operacion.toLowerCase()==="venta"&&(!ffExacta||w.Fecha===fechaFinal)) 
       }
 
       let minMaxPesajes = [minP,maxP]
