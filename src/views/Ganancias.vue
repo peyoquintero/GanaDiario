@@ -179,6 +179,29 @@ export default {
   {
     return Math.round((pesoFinal.Peso-pesoInicial.Peso)/ ((new Date(pesoFinal.Fecha)-new Date(pesoInicial.Fecha))/86400000)*1000)
   },
+ gananciaDiariaPesajes(results, fechaInicial, fechaFinal, fiExacta, ffExacta, filtroVentas) {
+    var minmaxPesajes = [];
+    results.forEach(result => {
+      let datafilter=result.pesajes;
+      datafilter=datafilter.filter(w => w.Fecha>=fechaInicial&&w.Fecha<=fechaFinal);
+      let minP=datafilter[0];
+      let maxP=datafilter[datafilter.length-1];
+      if(fiExacta) {
+        minP=datafilter.find(w => w.Fecha===fechaInicial);
+      }
+      if(ffExacta) {
+        maxP=datafilter.find(w => w.Fecha===fechaFinal);
+      }
+      if(filtroVentas) {
+        maxP=datafilter.find(w => w.Operacion.toLowerCase()==="venta"&&(!ffExacta||w.Fecha===fechaFinal));
+      }
+
+      let minMaxPesajes=[minP, maxP];
+      let objresult={ Codigo: result.Codigo, pi: minMaxPesajes[0], pf: minMaxPesajes[1] };
+      if((minP!==undefined)&&(maxP!==undefined)&&(maxP.Fecha>minP.Fecha)) { minmaxPesajes.push(objresult); };
+    });
+    return minmaxPesajes;
+ },
   ganancias(hispesajes,fechaInicial,fiExacta,fechaFinal,ffExacta,filtroVentas)
   {
     var results = hispesajes.reduce(function(h, obj) {
@@ -197,30 +220,7 @@ export default {
 
     results = results.filter(result=>result.pesajes.length>1) // Excluir semovientes con un solo pesaje
     
-    var minmaxPesajes = [];
-    results.forEach(result => {
-      let datafilter = result.pesajes;
-      datafilter = datafilter.filter(w=>w.Fecha>=fechaInicial&&w.Fecha<=fechaFinal)
-      let minP = datafilter[0];
-      let maxP = datafilter[datafilter.length-1];
-      if (fiExacta)
-      {
-        minP = datafilter.find(w=>w.Fecha===fechaInicial)
-      }
-      if (ffExacta)
-      {
-        maxP = datafilter.find(w=>w.Fecha===fechaFinal)
-      }
-      if (filtroVentas)
-      {
-              maxP = datafilter.find(w=>w.Operacion.toLowerCase()==="venta"&&(!ffExacta||w.Fecha===fechaFinal)) 
-      }
-
-      let minMaxPesajes = [minP,maxP]
-      let objresult = {Codigo: result.Codigo, pi: minMaxPesajes[0],pf: minMaxPesajes[1]};
-      if((minP!==undefined)&&(maxP!==undefined)&&(maxP.Fecha>minP.Fecha)) 
-      {minmaxPesajes.push(objresult)};
-    });
+    let minmaxPesajes = this.gananciaDiariaPesajes(results, fechaInicial, fechaFinal, fiExacta, ffExacta, filtroVentas);
 
     var datos = minmaxPesajes.map(w=> {return {"Codigo":w.Codigo,
     "FechaInicial":w.pi.Fecha,
@@ -307,6 +307,8 @@ button{
   margin-left: 10px;
 }
 </style>
+
+
 
 
 
