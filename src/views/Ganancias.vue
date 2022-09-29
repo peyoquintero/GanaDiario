@@ -85,6 +85,7 @@ export default {
     filtroPeso: '*',
     filtroCodigo: '',
     filtroVentas: false,
+    apiResult : {},
     lotes:[]
   }},
   computed: {
@@ -233,19 +234,30 @@ export default {
   }
   },
     mounted() {
-        var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/1?key=AIzaSyCGW3gRbBisLX950bZJDylH-_QJTR7ogd8";
-            axios.get(url).then(
-              response => {
-    console.log(response.data);
-      this.hispesajes = response.data;
-      this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
-      this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
-      this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
-      this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
-      localStorage.setItem('hispesajes', JSON.stringify(this.hispesajes));
-    });
-   }
+      var url = "https://sheets.googleapis.com/v4/spreadsheets/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/values/PesajesPorCodigo?key=AIzaSyCGW3gRbBisLX950bZJDylH-_QJTR7ogd8";
+      axios.get(url).then(response => {this.apiResult = response.data; 
+                                        const rows = [];
+                                          const rawRows = this.apiResult.values || [];
+                                          const headers = rawRows.shift();
+                                            rawRows.forEach((row) => {
+                                            const rowData = {};
+                                            row.forEach((item, index) => {
+                                            rowData[headers[index]] = item;
+                                          });
+                                          rows.push(rowData);
+                                          });
+                                      
+                                          this.hispesajes = rows;
+                                          this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
+                                          this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
+                                          this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
+                                          this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
+
+                                        });
+
+   
   }
+} 
 </script>
 
 <style scoped>
