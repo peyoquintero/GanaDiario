@@ -62,6 +62,7 @@
 <script>
 import DemoGrid from './Grid.vue'
 import axios from 'axios';
+import shared from './shared.js';
 
 export default {
   components: {
@@ -235,26 +236,14 @@ export default {
   },
     mounted() {
       var url = "https://sheets.googleapis.com/v4/spreadsheets/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/values/PesajesPorCodigo?key=AIzaSyCGW3gRbBisLX950bZJDylH-_QJTR7ogd8";
-      axios.get(url).then(response => {this.apiResult = response.data; 
-                                        const rows = [];
-                                          const rawRows = this.apiResult.values || [];
-                                          const headers = rawRows.shift();
-                                            rawRows.forEach((row) => {
-                                            const rowData = {};
-                                            row.forEach((item, index) => {
-                                            rowData[headers[index]] = item;
-                                          });
-                                          rows.push(rowData);
-                                          });
-                                      
-                                          this.hispesajes = rows;
+      axios.get(url).then(response => {const apiResult = response.data; 
+                                          this.hispesajes = shared.transform(apiResult);
                                           this.fechasPesaje = [...new Set( this.hispesajes.map(obj => obj.Fecha)) ];
                                           this.fechaInicial = this.fechasPesaje[0]??this.fechaInicial;
                                           this.fechaFinal = this.fechasPesaje[this.fechasPesaje.length-1]??this.fechaFinal;
                                           this.lotes = this.validLoteOptions([...new Set( this.hispesajes.map(obj => obj.Lote))]);
 
                                         });
-
    
   }
 } 

@@ -25,6 +25,7 @@
 <script>
 import DemoGrid from './Grid.vue'
 import axios from 'axios';
+import shared from './shared.js';
 
 export default {
   components: {
@@ -91,17 +92,11 @@ export default {
   }
   },
   mounted() {
-        var url = "https://opensheet.elk.sh/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/4";
-        try{
-        axios.get(url).then(response => {
-          this.hisPesajes = response.data;
-          this.gridData = this.master(this.hisPesajes);
-          localStorage.setItem('hispesajes', JSON.stringify(this.gridData));})
-        .catch(err=>this.hispesajes = JSON.parse(localStorage.getItem('hispesajes')))
-        }
-        catch(error){
-          console.log('Problema trayendo datos');
-        }
+      var url = "https://sheets.googleapis.com/v4/spreadsheets/1ZfXM4qnajw8QSaxrx6aXKa_xbMDZe3ryWt8E3alSyEE/values/PesajesPorCodigo?key=AIzaSyCGW3gRbBisLX950bZJDylH-_QJTR7ogd8";
+      axios.get(url).then(response => {const apiResult = response.data; 
+                                          this.hisPesajes = shared.transform(apiResult);
+                                          this.gridData = this.master(this.hisPesajes);
+                                        });
   }
 }
 </script>
