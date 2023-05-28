@@ -70,9 +70,9 @@ export default {
   },
   data() {return {
     searchQuery: '',
-    gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia','PesoHoy'],
-    gridHeaders: ['Codigo','Inicio','Final','Peso(I)','Peso(F)','Ganancia','Peso Hoy'],
-    gridHeaderwidthpct:[15,20,20,15,15,15],
+    gridColumns: ['Codigo','FechaInicial','FechaFinal','PesoInicial','PesoFinal','Ganancia'],
+    gridHeaders: ['Codigo','Inicio','Final','Peso(I)','Peso(F)','Ganancia'],
+    gridHeaderwidthpct:[18,23,23,18,18],
     excludeChar: "",
     gridData: [],
     hispesajes: [],
@@ -169,12 +169,7 @@ export default {
       } 
     }
 
-     this.gridData = this.gridData.map(obj=> ({ ...obj, PesoHoy: this.pesoProyectado(obj.FechaFinal,new Date().toDateString(),obj.PesoFinal,obj.Ganancia) }))
   },  
-  pesoProyectado(fechaInicial,fechaFinal,PesoInicial,gananciaDia)
-  {
-    return parseInt(PesoInicial) + Math.round(((new Date(fechaFinal)-new Date(fechaInicial))/86400000)*gananciaDia/1000);
-  },
   gananciaDiaria(pesoInicial,pesoFinal)
   {
     return Math.round((pesoFinal.Peso-pesoInicial.Peso)/ ((new Date(pesoFinal.Fecha)-new Date(pesoInicial.Fecha))/86400000)*1000)
@@ -307,9 +302,3 @@ button{
   margin-left: 10px;
 }
 </style>
-
-
-
-
-
-
