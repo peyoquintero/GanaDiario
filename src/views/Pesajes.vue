@@ -28,8 +28,8 @@ export default {
   },
   data() {return {
     searchQuery: '',
-    gridColumns: ['Fecha','Codigo','Peso','Sexo','Marca','Lote'],
-    gridHeaderwidthpct: [20,15,15,15,10,25],
+    gridColumns: ['Fecha','Codigo','Peso','Marca','Operacion'],
+    gridHeaderwidthpct: [20,20,20,10,30],
     gridData: [],
     excludeColumn:'Peso',
     excludeChar:''

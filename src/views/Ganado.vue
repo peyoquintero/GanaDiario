@@ -2,9 +2,21 @@
   <div class="container">
     <section>
       <label>Codigo
-        <input style="display:block" name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder=""></label>
+        <input style="display:block" name="fbCodigo" class="freeinput" v-model="filtroCodigo" placeholder="">
+        </label>
       <label>Marca 
-        <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca"></label>
+       <input style="display:block" id="marca" class="freeinputsmall" v-model="filtroMarca"></label>
+       <label style="display:block">Revisar
+               <input style="display:block" type="checkbox" id="checkboxVx" v-model="filtroHuerfanos" >
+       </label>
+       <label>Fecha Venta
+        <select style=" display:block; width:120px; height:30px" v-model="fechaVenta" >
+        <option v-for="option in fechasPesaje" v-bind:value="option" v-bind:key="option" style="background:lightgrey">
+        {{ option }}
+        </option>
+        </select>
+      </label>
+
       <button @click="applyFilters">Ok</button>
     </section>
     <section class="totals">
@@ -33,15 +45,18 @@ export default {
   },
   data() {return {
     searchQuery: '',
-    gridColumns: ['Codigo','FechaInicial','Sexo','Marca'],
-    gridHeaders: ['Codigo','Fecha Entrada','Sexo','Marca'],
+    gridColumns: ['Codigo','FechaInicial','FechaFinal','Marca'],
+    gridHeaders: ['Codigo','Fecha Entrada','Fecha Salida','Marca'],
     gridHeaderwidthpct: [25,25,25,25],
     gridData: [],
     excludeColumn:'Peso',
     excludeChar:'?',
     hisPesajes: [],
+    fechasPesaje: [],
+    fechaVenta: new Date(),
     filtroMarca: '*',
     filtroCodigo: '',
+    filtroHuerfanos: false,
     hisPesajesFiltered: [],
   }},
   computed: {
@@ -53,7 +68,7 @@ export default {
   methods : {
   applyFilters(event)
   {
-    this.hispesajesFiltered = this.hisPesajes.filter(pesaje=>pesaje.Lote!=='MUERTO'); 
+    this.hispesajesFiltered = this.hisPesajes.filter(pesaje=>pesaje.Lote !== 'MUERTO'); 
     if (this.filtroMarca!=="*" && this.filtroMarca!=="") 
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Marca===this.filtroMarca); 
@@ -62,7 +77,21 @@ export default {
     {
       this.hispesajesFiltered = this.hispesajesFiltered.filter(pesaje=>pesaje.Codigo.startsWith(this.filtroCodigo)); 
     }
+    if (this.filtroHuerfanos)
+    {
+//      this.hispesajesFiltered = 
+      var ventas = this.hispesajesFiltered.filter(pesaje=>pesaje.Operacion === 'Venta' && pesaje.Fecha === this.fechaVenta);
+      var otrasOperaciones = this.hispesajesFiltered.filter(pesaje=>pesaje.Operacion !== 'Venta' && pesaje.Fecha < this.fechaVenta);
+      this.hispesajesFiltered =  ventas.filter(function(element) {
+      for (var j = 0; j < otrasOperaciones.length; j++) {
+        if (element.Codigo == otrasOperaciones[j].Codigo) {
+          return false;
+        }
+      }
+       return true;
+      });
      this.gridData = this.master(this.hispesajesFiltered);
+  }
   },  
   master(hispesajes)
   {
@@ -84,7 +113,8 @@ export default {
     results.forEach(result => {
       let datafilter = result.pesajes;
       let minP = datafilter[0];
-      let objresult = {Codigo: result.Codigo, FechaInicial:minP.Fecha,Sexo:minP.Sexo,Marca:minP.Marca,Activo:minP.Lote!=='MUERTO'};
+      let fechaSalida = datafilter.length > 1 ? datafilter[datafilter.length-1].Fecha : null;
+      let objresult = {Codigo: result.Codigo, FechaInicial:minP.Fecha,FechaFinal:fechaSalida,Marca:minP.Marca,Activo:minP.Lote!=='MUERTO'};
       {datos.push(objresult)};
     });
 
@@ -96,6 +126,7 @@ export default {
       axios.get(url).then(response => {const apiResult = response.data; 
                                           this.hisPesajes = shared.transform(apiResult);
                                           this.gridData = this.master(this.hisPesajes);
+                                          this.fechasPesaje = [...new Set( this.hisPesajes.map(obj => obj.Fecha)) ];
                                         });
   }
 }
